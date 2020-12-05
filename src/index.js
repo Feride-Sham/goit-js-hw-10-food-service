@@ -6,6 +6,7 @@ import menuTemplates from "./templates/menu.hbs";
 const menuList = postRefs.menu;
 const toggle = postRefs.toggle;
 const body = postRefs.body;
+
 const menuItem = menuTemplates(menuArray);
 const storageKey = "theme";
 const localStorageGetValue = localStorage.getItem(storageKey);
@@ -17,26 +18,27 @@ const Theme = {
 // создание разметки по шаблону
 menuList.insertAdjacentHTML("beforeend", menuItem);
 
-// вешает слышатель события на чекбокс
-toggle.addEventListener("change", () => {
-  getCheckedValue();
-});
+// вешает слушатель события на чекбокс
+toggle.addEventListener("change", getCheckedValue);
 
 initView();
 
-// call-back функция для присваивания темы
-// и записи значения в LocalStorage
+// функция с условием для выбора темы
 function getCheckedValue() {
   if (toggle.checked === true) {
-    body.classList.remove(Theme.LIGHT);
-    localStorage.setItem(storageKey, Theme.DARK);
-    body.classList.add(Theme.DARK);
+    changeTheme(Theme.LIGHT, Theme.DARK);
   } else {
-    body.classList.remove(Theme.DARK);
-    localStorage.setItem(storageKey, Theme.LIGHT);
-    body.classList.add(Theme.LIGHT);
+    changeTheme(Theme.DARK, Theme.LIGHT);
   }
 }
+
+// call-back функция для присваивания темы
+// и записи значения в LocalStorage
+const changeTheme = (oldTheme, newTheme) => {
+  body.classList.remove(oldTheme);
+  localStorage.setItem(storageKey, newTheme);
+  body.classList.add(newTheme);
+};
 
 // call-back функция для изменения значения чекбокса,
 // если пользователь выбрал темную тему и обновил страницу
